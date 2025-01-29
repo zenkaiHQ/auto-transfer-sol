@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 
 export default function Home() {
   const router = useRouter();
-  const { ready, authenticated, } = usePrivy();
+  const { ready, authenticated, user } = usePrivy();
   const { login } = useLogin();
   const { logout } = useLogout();
   const handleLogin = () => {
@@ -14,6 +14,7 @@ export default function Home() {
       router.push("/dashboard");
     }
   }
+  console.log(user)
   console.log(ready, "Authentication state", authenticated)
   return (
     <>
