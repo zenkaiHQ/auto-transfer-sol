@@ -1,29 +1,30 @@
 'use client'
-import { Button } from "@/components/ui/button";
-import { useLogin, useLogout, usePrivy } from "@privy-io/react-auth";
+import { useWallet } from "@solana/wallet-adapter-react"
+import { WalletDisconnectButton, WalletMultiButton } from "@solana/wallet-adapter-react-ui"
 import { useRouter } from "next/navigation";
+import Cookies from "js-cookie";
+import { useEffect } from "react";
 
 export default function Home() {
-  const router = useRouter();
-  const { ready, authenticated, user } = usePrivy();
-  const { login } = useLogin();
-  const { logout } = useLogout();
-  const handleLogin = () => {
-    login();
-    if (authenticated) {
-      router.push("/dashboard");
+  const route = useRouter()
+  const { connected, } = useWallet();
+  useEffect(() => {
+    async function checkConnection() {
+      if (connected) {
+        console.log("Connected successfully")
+        Cookies.set('walletConnected', 'true')
+        route.push('/dashboard')
+      }
     }
-  }
-  console.log(user)
-  console.log(ready, "Authentication state", authenticated)
+    checkConnection();
+  }, [connected])
   return (
     <>
       <div className="flex flex-col items-center justify-center h-screen">
-        {/* <button onClick={login}>Login</button> */}
-        {
-          (authenticated) ?
-            <Button onClick={logout} className="">Logout</Button>
-            : <Button onClick={handleLogin} className="">Login</Button>
+        {connected ?
+          <WalletDisconnectButton />
+          : <WalletMultiButton />
+
         }
       </div>
     </>

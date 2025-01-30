@@ -3,9 +3,8 @@ import type { NextRequest } from 'next/server'
 
 export function middleware(request: NextRequest) {
     const path = request.nextUrl.pathname
-    const token = request.cookies.get('privy-token')
-
-    // If no token and trying to access dashboard, redirect to home
+    const token = request.cookies.get('walletConnected')
+    console.log(token?.value)
     if (path.startsWith('/dashboard') && !token) {
         return NextResponse.redirect(new URL('/', request.url))
     }
